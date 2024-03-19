@@ -1,4 +1,4 @@
-# TypeScript Example Snap Front-end
+# Snappy Airlines - Companion dapp
 
 This project was bootstrapped with [Gatsby](https://www.gatsbyjs.com/).
 
