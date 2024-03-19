@@ -21,7 +21,7 @@ a canary distribution for developers that provides access to upcoming features.
 ## Getting Started
 This project demostrates some of the latest features in Snaps. These features may not yet be available in Metamask Stable. So it is recommended to install [MetaMask Flask](https://docs.metamask.io/snaps/get-started/install-flask/) to try out the examples.
 
-Clone the template-snap repository and set up the development environment:
+Clone the repository and set up the development environment:
 
 ```shell
 yarn install && yarn start
