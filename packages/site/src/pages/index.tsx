@@ -6,6 +6,7 @@ import {
   ReconnectButton,
   SendHelloButton,
   Card,
+  SignMessageButton,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
 import {
@@ -15,6 +16,7 @@ import {
   useRequestSnap,
 } from '../hooks';
 import { isLocalSnap, shouldDisplayReconnectButton } from '../utils';
+import { keyringClient } from '../keyring/keyring';
 
 const Container = styled.div`
   display: flex;
@@ -111,13 +113,102 @@ const Index = () => {
     : snapsDetected;
 
   const handleSendHelloClick = async () => {
-    await invokeSnap({ method: 'hello' });
+    console.log("result", await invokeSnap({ method: 'hello' }));
+  };
+
+  const handleCreateAccountClick = async () => {
+    const account = await keyringClient.createAccount({
+      "signerCount": 5,
+      "threshold": 3
+    });
+    console.log("New Account", account);
+  }
+
+  const handleSignMessageClick = async () => {
+    try {
+      const accounts = (await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      })) as any[];
+
+      await window.ethereum.request({
+        "method": "eth_signTypedData_v4",
+        "params": [
+          accounts[0],
+          {
+            "types": {
+              "EIP712Domain": [
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "version",
+                  "type": "string"
+                },
+                {
+                  "name": "chainId",
+                  "type": "uint256"
+                },
+                {
+                  "name": "verifyingContract",
+                  "type": "address"
+                }
+              ],
+              "Person": [
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "wallet",
+                  "type": "address"
+                }
+              ],
+              "Mail": [
+                {
+                  "name": "from",
+                  "type": "Person"
+                },
+                {
+                  "name": "to",
+                  "type": "Person"
+                },
+                {
+                  "name": "contents",
+                  "type": "string"
+                }
+              ]
+            },
+            "primaryType": "Mail",
+            "domain": {
+              "name": "Ether Mail",
+              "version": "1",
+              "chainId": 1,
+              "verifyingContract": "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+            },
+            "message": {
+              "from": {
+                "name": "Jack",
+                "wallet": "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826"
+              },
+              "to": {
+                "name": "Bob",
+                "wallet": "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB"
+              },
+              "contents": "Hello, Bob!"
+            }
+          }
+        ]
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Snappy Airlines</Span>
       </Heading>
       <Subtitle>
         Get started by editing <code>src/index.ts</code>
@@ -179,6 +270,44 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleSendHelloClick}
+                disabled={!installedSnap}
+              />
+            ),
+          }}
+          disabled={!installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(installedSnap) &&
+            !shouldDisplayReconnectButton(installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'Sign Message',
+            description:
+              'Display Signature Insights in MetaMask.',
+            button: (
+              <SignMessageButton
+                onClick={handleSignMessageClick}
+                disabled={!installedSnap}
+              />
+            ),
+          }}
+          disabled={!installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(installedSnap) &&
+            !shouldDisplayReconnectButton(installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'Create Account',
+            description:
+              'Create a Custom EVM Account',
+            button: (
+              <SendHelloButton
+                onClick={handleCreateAccountClick}
                 disabled={!installedSnap}
               />
             ),

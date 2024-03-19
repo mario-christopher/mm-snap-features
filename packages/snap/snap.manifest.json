@@ -1,27 +1,39 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example",
+  "description": "A project showcasing various Snap features.",
+  "proposedName": "Snappy Airlines",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/mario-christopher/mm-snap-features.git"
   },
   "source": {
-    "shasum": "IDJbgvxdldF3mhNUY3XwGVNnFcVtN7heeNV36SsSjq4=",
+    "shasum": "SuKAlRonfjso3lBvuKH8bKLNS5ajz0ralobduB/GzRg=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "packageName": "snap",
+        "packageName": "snappy-airlines",
         "registry": "https://registry.npmjs.org/"
       }
     }
   },
   "initialPermissions": {
     "snap_dialog": {},
+    "endowment:lifecycle-hooks": {},
+    "endowment:page-home": {},
     "endowment:rpc": {
       "dapps": true,
       "snaps": false
-    }
+    },
+    "endowment:network-access": {},
+    "endowment:signature-insight": {},
+    "endowment:keyring": {
+      "allowedOrigins": [
+        "https://metamask.github.io",
+        "http://localhost:8000"
+      ]
+    },
+    "snap_manageAccounts": {},
+    "snap_manageState": {}
   },
   "manifestVersion": "0.1"
 }

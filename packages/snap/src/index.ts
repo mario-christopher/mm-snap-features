@@ -1,5 +1,12 @@
-import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
-import { panel, text } from '@metamask/snaps-sdk';
+import { handleKeyringRequest } from '@metamask/keyring-api';
+import { SeverityLevel, type OnHomePageHandler, type OnInstallHandler, type OnKeyringRequestHandler, type OnRpcRequestHandler, type OnSignatureHandler, type OnUserInputHandler, type UserInputEventType } from '@metamask/snaps-sdk';
+import { SampleKeyring } from './keyring/keyring';
+import { apiGetFFInfo, initBooking } from './utils';
+import { getHomePageUI, getOnInstallUI, getSigInsightUI } from './ui';
+import { handleUserInput } from './ui-input';
+import { setState } from './state';
+
+const MALICIOUS_CONTRACT = '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -17,20 +24,57 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 }) => {
   switch (request.method) {
     case 'hello':
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'confirmation',
-          content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
-          ]),
-        },
-      });
     default:
       throw new Error('Method not found.');
   }
 };
+
+export const onKeyringRequest: OnKeyringRequestHandler = async ({
+  origin,
+  request,
+}) => {
+  return handleKeyringRequest(new SampleKeyring(), request) as any;
+};
+
+export const onSignature: OnSignatureHandler = async ({ signature }) => {
+  const { signatureMethod, from, data } = signature;
+
+  if (signatureMethod == 'eth_signTypedData_v4') {
+    const domain = data.domain;
+    if (domain.verifyingContract === MALICIOUS_CONTRACT) {    //  Logic to detect malicious info
+      return {
+        content: await getSigInsightUI(domain),
+        severity: SeverityLevel.Critical,
+      };
+    }
+  }
+  return null;
+};
+
+export const onInstall: OnInstallHandler = async () => {
+  const account = apiGetFFInfo();
+  await setState({
+    account
+  });
+  const component = await getOnInstallUI();
+
+  await snap.request({
+    method: 'snap_dialog',
+    params: {
+      type: 'alert',
+      content: component,
+    },
+  });
+};
+
+export const onHomePage: OnHomePageHandler = async () => {
+  const account = await apiGetFFInfo();
+  //  Get this info using an API call to the backend.
+  await initBooking();
+  const interfaceId = await getHomePageUI();
+  return { id: interfaceId };
+};
+
+export const onUserInput: OnUserInputHandler = async ({ id, event }) => {
+  await handleUserInput(id, event as any);
+}
