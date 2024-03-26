@@ -34,12 +34,12 @@ export async function handleUserInput(id: string, event: {
         break;
       }
 
-      case "btnBookFlight_Name": {
-        await updateUI_BookFlight_Name(id)
+      //  ===== Book Flight - Names Page
+      case "btnBookFlight_Name_Cancel": {
+        await updateUI_Home(id)
         break;
       }
-
-      case "btnBookFlight_Dates": {
+      case "btnBookFlight_Name_Next": {
         const errors = await validateForm(id, "form_BookingName");
         if (errors.length == 0) {
           await updateUI_BookFlight_Dates(id)
@@ -49,7 +49,13 @@ export async function handleUserInput(id: string, event: {
         break;
       }
 
-      case "btnBookFlight_Airports": {
+      //  ===== Book Flight - Dates Page
+      case "btnBookFlight_Dates_Back": {
+        await validateForm(id, "form_BookingDates");
+        await updateUI_BookFlight_Name(id)
+        break;
+      }
+      case "btnBookFlight_Dates_Next": {
         const errors = await validateForm(id, "form_BookingDates");
         if (errors.length == 0) {
           await updateUI_BookFlight_Airports(id)
@@ -59,7 +65,13 @@ export async function handleUserInput(id: string, event: {
         break;
       }
 
-      case "btnBookFlight_Review": {
+      //  ===== Book Flight - Airports Page
+      case "btnBookFlight_Airports_Back": {
+        await validateForm(id, "form_BookingAirports");
+        await updateUI_BookFlight_Dates(id)
+        break;
+      }
+      case "btnBookFlight_Airports_Next": {
         const errors = await validateForm(id, "form_BookingAirports");
         if (errors.length == 0) {
           await updateUI_BookFlight_Review(id)
@@ -69,7 +81,12 @@ export async function handleUserInput(id: string, event: {
         break;
       }
 
-      case "btnBookFlight_Voucher": {
+      //  ===== Book Flight - Review Page
+      case "btnBookFlight_Review_Back": {
+        await updateUI_BookFlight_Airports(id)
+        break;
+      }
+      case "btnBookFlight_Review_Next": {
         await updateUI_BookFlight_Voucher(id)
         break;
       }

@@ -111,13 +111,13 @@ export async function updateUI_BookFlight_Name(id: string, errors: string[] = []
         button({
           value: "Cancel",
           buttonType: 'button',
-          name: "btnBackToHome",
+          name: "btnBookFlight_Name_Cancel",
           variant: 'secondary'
         }),
         button({
           value: "Next >",
           buttonType: 'button',
-          name: "btnBookFlight_Dates",
+          name: "btnBookFlight_Name_Next",
           variant: 'secondary'
         }),
         ...itemErrors(errors)
@@ -160,13 +160,13 @@ export async function updateUI_BookFlight_Dates(id: string, errors: string[] = [
         button({
           value: "< Back",
           buttonType: 'button',
-          name: "btnBookFlight_Name",
+          name: "btnBookFlight_Dates_Back",
           variant: 'secondary'
         }),
         button({
           value: "Next >",
           buttonType: 'button',
-          name: "btnBookFlight_Airports",
+          name: "btnBookFlight_Dates_Next",
           variant: 'secondary'
         }),
         ...itemErrors(errors)
@@ -203,13 +203,13 @@ export async function updateUI_BookFlight_Airports(id: string, errors: string[] 
         button({
           value: "< Back",
           buttonType: 'button',
-          name: "btnBookFlight_Dates",
+          name: "btnBookFlight_Airports_Back",
           variant: 'secondary'
         }),
         button({
           value: "Next >",
           buttonType: 'button',
-          name: "btnBookFlight_Review",
+          name: "btnBookFlight_Airports_Next",
           variant: 'secondary'
         }),
         ...itemErrors(errors)
@@ -237,13 +237,13 @@ export async function updateUI_BookFlight_Review(id: string) {
         button({
           value: "< Back",
           buttonType: 'button',
-          name: "btnBookFlight_Airports",
+          name: "btnBookFlight_Review_Back",
           variant: 'secondary'
         }),
         button({
           value: "Next >",
           buttonType: 'button',
-          name: "btnBookFlight_Voucher",
+          name: "btnBookFlight_Review_Next",
           variant: 'secondary'
         }),
       ]),
